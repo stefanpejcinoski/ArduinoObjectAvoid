@@ -1,6 +1,7 @@
 // defines pins numbers
 const int trigPin = 8;
 const int echoPin = 9;
+const int turn=200;
 // defines variables
 long duration;
 int distance;
@@ -17,24 +18,76 @@ digitalWrite(11,HIGH);
 digitalWrite(12,HIGH);
 Serial.begin(9600); // Starts the serial communication
 }
+void left (int ms) 
+ {
+  digitalWrite(5 , LOW);
+  digitalWrite(12 , LOW); 
+  delay(ms); 
+  digitalWrite(5 , HIGH);
+  digitalWrite(12 , HIGH);
+ }
+
+ void right (int ms )
+ {
+  digitalWrite(4 , LOW); 
+  digitalWrite(12 , LOW);
+  delay(ms);
+  digitalWrite(4, HIGH);
+  digitalWrite(12 , HIGH);
+ }
+
+void fwd (void)
+{
+  digitalWrite(12 , LOW); 
+}
+void Stop (void)
+{
+  int state=digitalRead(12);
+  digitalWrite(12 , HIGH);
+  digitalWrite(11 , HIGH); 
+  if(state)
+  {
+  digitalWrite(11 , LOW);
+  delay(turn/2);
+  digitalWrite(11 , HIGH);
+ }
+else 
+{
+  digitalWrite(12 , LOW); 
+  delay(turn/2);
+  digitalWrite(12 , HIGH); 
+}
+}
+
+
+ void rew (void)
+ {
+  digitalWrite(11 , LOW);
+ }
 void loop() {
- 
-int temp;
+
+
+int temp=0;
  
   temp = SensorFunction();
  
- if(temp > 100 ){
-  digitalWrite(12 ,LOW );
+ if(temp > 70 ){
+  fwd (); 
  }
  else
  {
  
-    digitalWrite(12,HIGH);
-    digitalWrite(11 ,LOW );
-    delay(3000);
-    digitalWrite(11,HIGH);
+   Stop();
+   right (turn);
+   Stop();
+   left (3*turn);
+   Stop();
+   right (turn);
+   Stop();
+   
  
  }
+ 
 }
  
 int SensorFunction(){
